@@ -22,7 +22,7 @@
 1. Клонируйте репозиторий:
 
 ```
-git clone https://github.com/yourusername/barter-platform.git
+git clone https://github.com/meloch287/Barter-system.git
 ```
 
 2. Перейдите в директорию проекта:
