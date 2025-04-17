@@ -1,0 +1,21 @@
+{% extends 'ads/base.html' %}
+{% block title %}Предложение обмена{% endblock %}
+{% block content %}
+    <h1>Предложение обмена для "{{ ad_receiver.title }}"</h1>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <label>Выберите ваше объявление:</label>
+        <select name="ad_sender_id" required>
+            {% for ad in user_ads %}
+                <option value="{{ ad.id }}">{{ ad.title }}</option>
+            {% endfor %}
+        </select>
+        <label>Комментарий:</label>
+        <textarea name="comment" rows="4"></textarea>
+        <button type="submit">Отправить предложение</button>
+    </form>
+    <a href="{% url 'ad_list' %}">Назад</a>
+{% endblock %}

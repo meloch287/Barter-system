@@ -1,0 +1,38 @@
+{% extends 'templates/registration/base.html' %}
+{% block title %}Мои предложения{% endblock %}
+{% block content %}
+    <h1>Мои предложения</h1>
+    <h2>Отправленные предложения</h2>
+    <ul>
+        {% for proposal in sent_proposals %}
+            <li>
+                {{ proposal.ad_sender.title }} -> {{ proposal.ad_receiver.title }} ({{ proposal.get_status_display }})
+                <p>Комментарий: {{ proposal.comment }}</p>
+            </li>
+        {% empty %}
+            <p>Нет отправленных предложений.</p>
+        {% endfor %}
+    </ul>
+    <h2>Полученные предложения</h2>
+    <ul>
+        {% for proposal in received_proposals %}
+            <li>
+                {{ proposal.ad_sender.title }} -> {{ proposal.ad_receiver.title }} ({{ proposal.get_status_display }})
+                <p>Комментарий: {{ proposal.comment }}</p>
+                {% if proposal.status == 'pending' %}
+                    <form method="post" action="{% url 'update_proposal_status' proposal.id %}">
+                        {% csrf_token %}
+                        <select name="status">
+                            <option value="accepted">Принять</option>
+                            <option value="rejected">Отклонить</option>
+                        </select>
+                        <button type="submit">Обновить статус</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% empty %}
+            <p>Нет полученных предложений.</p>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'ad_list' %}">Назад</a>
+{% endblock %}

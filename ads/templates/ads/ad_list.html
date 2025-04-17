@@ -1,0 +1,43 @@
+{% extends 'ads/base.html' %}
+{% block title %}Список объявлений{% endblock %}
+{% block content %}
+    <h1>Список объявлений</h1>
+    <form method="get">
+        <input type="text" name="q" value="{{ query }}" placeholder="Поиск по заголовку или описанию">
+        <input type="text" name="category" value="{{ category }}" placeholder="Категория">
+        <select name="condition">
+            <option value="">Все состояния</option>
+            <option value="new" {% if condition == 'new' %}selected{% endif %}>Новый</option>
+            <option value="used" {% if condition == 'used' %}selected{% endif %}>Б/У</option>
+            <option value="refurbished" {% if condition == 'refurbished' %}selected{% endif %}>Восстановленный</option>
+        </select>
+        <button type="submit">Найти</button>
+    </form>
+    <ul>
+        {% for ad in page_obj %}
+            <li>
+                <h3>{{ ad.title }}</h3>
+                <p>{{ ad.description }}</p>
+                <p>Категория: {{ ad.category }} | Состояние: {{ ad.get_condition_display }} | Автор: {{ ad.user.username }}</p>
+                {% if ad.image_url %}<img src="{{ ad.image_url }}" alt="{{ ad.title }}" width="100">{% endif %}
+                {% if user.is_authenticated %}
+                    <a href="{% url 'create_proposal' ad.id %}">Предложить обмен</a>
+                    {% if ad.user == user %}
+                        <a href="{% url 'edit_ad' ad.id %}">Редактировать</a>
+                        <a href="{% url 'delete_ad' ad.id %}">Удалить</a>
+                    {% endif %}
+                {% endif %}
+            </li>
+        {% empty %}
+            <p>Объявления не найдены.</p>
+        {% endfor %}
+    </ul>
+    <div>
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}&q={{ query }}&category={{ category }}&condition={{ condition }}">Назад</a>
+        {% endif %}
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&q={{ query }}&category={{ category }}&condition={{ condition }}">Вперед</a>
+        {% endif %}
+    </div>
+{% endblock %}
