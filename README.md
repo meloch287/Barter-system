@@ -27,7 +27,7 @@ git clone https://github.com/meloch287/Barter-system.git
 
 2. Перейдите в директорию проекта:
 ```
-cd barter-platform
+cd Barter-system
 ```
 
 3. Установите зависимости:
